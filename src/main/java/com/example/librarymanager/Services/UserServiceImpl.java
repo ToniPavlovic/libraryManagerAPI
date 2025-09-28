@@ -1,5 +1,8 @@
 package com.example.librarymanager.Services;
 
+import com.example.librarymanager.Middleware.InvalidCredentialsException;
+import com.example.librarymanager.Middleware.UserNotAdminException;
+import com.example.librarymanager.Middleware.UserNotFoundException;
 import com.example.librarymanager.Models.User;
 import com.example.librarymanager.AppDataContext.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -21,7 +24,7 @@ public class UserServiceImpl implements UserService {
     public User registerUser(String name, String password, boolean isAdmin, User loggedInUser) {
         if(!repo.findAll().isEmpty()){
             if (loggedInUser == null || !loggedInUser.isAdmin()){
-                throw new RuntimeException("Only admins can register users!");
+                throw new UserNotAdminException();
             }
         } else {
             // first user is admin by default
@@ -36,10 +39,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User login(String name, String password) {
         User user = repo.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Invalid credentials!"));
+                .orElseThrow(InvalidCredentialsException::new);
 
         if (!verifyPassword(password, user.getPassword())) {
-            throw new RuntimeException("Invalid credentials!");
+            throw new InvalidCredentialsException();
         }
         return user;
     }
@@ -52,11 +55,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void removeUser(int userId, User loggedInUser) {
         if (loggedInUser == null || !loggedInUser.isAdmin()){
-            throw new RuntimeException("Only admins can remove users!");
+            throw new UserNotAdminException();
         }
 
         User existing = repo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found!"));
+                .orElseThrow(UserNotFoundException::new);
         repo.delete(existing);
     }
 
@@ -68,11 +71,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(int id, User updatedUser, User loggedInUser) {
         if (loggedInUser == null || !loggedInUser.isAdmin()){
-            throw new RuntimeException("Only admins can update users!");
+            throw new UserNotAdminException();
         }
 
         User existing = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found!"));
+                .orElseThrow(UserNotFoundException::new);
 
         existing.setName(updatedUser.getName());
         existing.setPassword(hashPassword(updatedUser.getPassword()));

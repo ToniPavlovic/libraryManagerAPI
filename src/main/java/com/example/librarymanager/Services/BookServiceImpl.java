@@ -1,5 +1,8 @@
 package com.example.librarymanager.Services;
 
+import com.example.librarymanager.Middleware.BookNotFoundException;
+import com.example.librarymanager.Middleware.UserNotAdminException;
+import com.example.librarymanager.Middleware.UserNotLoggedInException;
 import com.example.librarymanager.Models.Book;
 import com.example.librarymanager.Models.User;
 import com.example.librarymanager.AppDataContext.BookRepository;
@@ -22,19 +25,19 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book addBook(Book book, User user) {
-        if (user == null || !user.isAdmin()) throw new RuntimeException("Only admins can add books!");
+        if (user == null || !user.isAdmin()) throw new UserNotAdminException();;
         return bookRepository.save(book);
     }
 
     @Override
     public List<Book> getAvailableBooks(User user) {
-        if (user == null) throw new RuntimeException("You must be logged in!");
+        if (user == null) throw new UserNotLoggedInException();
         return bookRepository.findAll().stream().filter(b -> !b.isBorrowed()).toList();
     }
 
     @Override
     public List<Book> getBorrowedBooks(User user) {
-        if (user == null) throw new RuntimeException("You must be logged in!");
+        if (user == null) throw new UserNotLoggedInException();
         return bookRepository.findAll().stream()
                 .filter(b -> b.isBorrowed() && b.getBorrowedBy().getId() == user.getId())
                 .toList();
@@ -42,14 +45,14 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book borrowBook(int bookId, User user) {
-        if (user == null) throw new RuntimeException("You must be logged in!");
+        if (user == null) throw new UserNotLoggedInException();
         long borrowedCount = bookRepository.findAll().stream()
                 .filter(b -> b.isBorrowed() && b.getBorrowedBy().getId() == user.getId())
                 .count();
         if (borrowedCount >= MAX_BORROW) throw new RuntimeException("Maximum borrow limit reached");
 
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Book not found!"));
+                .orElseThrow(BookNotFoundException::new);
         if (book.isBorrowed()) throw new RuntimeException("Book is already borrowed!");
 
         book.setBorrowed(true);
@@ -63,7 +66,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book returnBook(int bookId, User user) {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Book not found!"));
+                .orElseThrow(BookNotFoundException::new);
         if (!book.isBorrowed() || book.getBorrowedBy().getId() != user.getId())
             throw new RuntimeException("You did not borrow this book!");
 
@@ -83,8 +86,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void removeBook(int bookId, User user) {
-        if (user == null || !user.isAdmin()) throw new RuntimeException("Only admins can remove books!");
-        if (!bookRepository.existsById(bookId)) throw new RuntimeException("Book not found!");
+        if (user == null || !user.isAdmin()) throw new UserNotAdminException();;
+        if (!bookRepository.existsById(bookId)) throw new BookNotFoundException();
         bookRepository.deleteById(bookId);
     }
 }
