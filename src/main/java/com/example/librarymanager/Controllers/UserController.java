@@ -1,5 +1,6 @@
 package com.example.librarymanager.Controllers;
 
+import com.example.librarymanager.Middleware.UserNotAdminException;
 import com.example.librarymanager.Models.User;
 import com.example.librarymanager.Middleware.UserNotFoundException;
 import com.example.librarymanager.Services.UserService;
@@ -34,7 +35,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@Valid @RequestBody User user, @RequestParam Integer adminId) {
         User admin = userService.findById(adminId)
-                .orElseThrow(() -> new RuntimeException("Admin not found!"));
+                .orElseThrow(UserNotAdminException::new);
         return userService.registerUser(user.getName(), user.getPassword(), user.isAdmin(), admin);
     }
 
@@ -43,7 +44,7 @@ public class UserController {
     public User updateUser(@PathVariable Integer id, @Valid @RequestBody User user,
                            @RequestParam Integer adminId) {
         User admin = userService.findById(adminId)
-                .orElseThrow(() -> new RuntimeException("Admin not found!"));
+                .orElseThrow(UserNotAdminException::new);
         return userService.updateUser(id, user, admin);
     }
 
@@ -51,7 +52,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable Integer id, @RequestParam Integer adminId) {
         User admin = userService.findById(adminId)
-                .orElseThrow(() -> new RuntimeException("Admin not found!"));
+                .orElseThrow(UserNotAdminException::new);
         userService.removeUser(id, admin);
     }
 }
