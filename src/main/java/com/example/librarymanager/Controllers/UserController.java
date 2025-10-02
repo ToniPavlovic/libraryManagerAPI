@@ -21,11 +21,13 @@ public class UserController {
     }
 
     @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
     public List<User> getAllUsers() {
         return userService.listUsers();
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public User getUser(@PathVariable Integer id) {
         return userService.findById(id)
                 .orElseThrow(UserNotFoundException::new);
@@ -49,7 +51,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Integer id, @RequestParam Integer adminId) {
         User admin = userService.findById(adminId)
                 .orElseThrow(UserNotAdminException::new);
