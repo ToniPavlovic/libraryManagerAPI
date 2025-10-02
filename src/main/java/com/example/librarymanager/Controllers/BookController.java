@@ -24,6 +24,7 @@ public class BookController {
     }
 
     @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
     public List<Book> getAvailableBooks(@RequestParam Integer userId) {
         User user = userService.findById(userId)
                 .orElseThrow(UserNotLoggedInException::new);
@@ -31,6 +32,7 @@ public class BookController {
     }
 
     @PostMapping("/borrow/{bookId}")
+    @ResponseStatus(HttpStatus.OK)
     public Book borrowBook(@PathVariable Integer bookId, @RequestParam Integer userId) {
         User user = userService.findById(userId)
                 .orElseThrow(UserNotLoggedInException::new);
@@ -38,6 +40,7 @@ public class BookController {
     }
 
     @PostMapping("/return/{bookId}")
+    @ResponseStatus(HttpStatus.OK)
     public Book returnBook(@PathVariable int bookId, @RequestParam Integer userId) {
         User user = userService.findById(userId)
                 .orElseThrow(UserNotLoggedInException::new);
@@ -53,7 +56,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{bookId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int bookId, @RequestParam Integer userId) {
         User user = userService.findById(userId)
                 .orElseThrow(UserNotLoggedInException::new);
@@ -61,6 +64,7 @@ public class BookController {
     }
 
     @GetMapping("/author/{author}")
+    @ResponseStatus(HttpStatus.OK)
     public List<Book> findByAuthor(@PathVariable String author, @RequestParam Integer userId) {
         User user = userService.findById(userId)
                 .orElseThrow(UserNotLoggedInException::new);
