@@ -7,6 +7,7 @@ import com.example.librarymanager.Services.BookService;
 import com.example.librarymanager.Services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,51 +24,53 @@ public class BookController {
         this.userService = userService;
     }
 
+    private User getCurrentUser(Authentication auth) {
+        if (auth == null || auth.getName() == null) {
+            throw new UserNotLoggedInException();
+        }
+        return userService.findByUsername(auth.getName())
+                .orElseThrow(UserNotLoggedInException::new);
+    }
+
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public List<Book> getAvailableBooks(@RequestParam Integer userId) {
-        User user = userService.findById(userId)
-                .orElseThrow(UserNotLoggedInException::new);
+    public List<Book> getAvailableBooks(Authentication auth, @RequestParam(required = false) Integer userId) {
+        User user = getCurrentUser(auth);
         return bookService.getAvailableBooks(user);
     }
 
     @PostMapping("/borrow/{bookId}")
     @ResponseStatus(HttpStatus.OK)
-    public Book borrowBook(@PathVariable Integer bookId, @RequestParam Integer userId) {
-        User user = userService.findById(userId)
-                .orElseThrow(UserNotLoggedInException::new);
+    public Book borrowBook(@PathVariable Integer bookId, Authentication auth, @RequestParam(required = false) Integer userId) {
+        User user = getCurrentUser(auth);
         return bookService.borrowBook(bookId, user);
     }
 
     @PostMapping("/return/{bookId}")
     @ResponseStatus(HttpStatus.OK)
-    public Book returnBook(@PathVariable int bookId, @RequestParam Integer userId) {
-        User user = userService.findById(userId)
-                .orElseThrow(UserNotLoggedInException::new);
+    public Book returnBook(@PathVariable int bookId, Authentication auth, @RequestParam(required = false) Integer userId) {
+        User user = getCurrentUser(auth);
         return bookService.returnBook(bookId, user);
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Book create(@Valid @RequestBody Book book, @RequestParam Integer userId) {
-        User user = userService.findById(userId)
-                .orElseThrow(UserNotLoggedInException::new);
+    public Book create(@Valid @RequestBody Book book, Authentication auth, @RequestParam(required = false) Integer userId) {
+        User user = getCurrentUser(auth);
         return bookService.addBook(book, user);
     }
 
     @DeleteMapping("/{bookId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int bookId, @RequestParam Integer userId) {
-        User user = userService.findById(userId)
-                .orElseThrow(UserNotLoggedInException::new);
+    public void delete(@PathVariable int bookId, Authentication auth, @RequestParam(required = false) Integer userId) {
+        User user = getCurrentUser(auth);
         bookService.removeBook(bookId, user);
     }
 
     @GetMapping("/author/{author}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Book> findByAuthor(@PathVariable String author, @RequestParam Integer userId) {
-        User user = userService.findById(userId)
-                .orElseThrow(UserNotLoggedInException::new);
+    public List<Book> findByAuthor(@PathVariable String author, Authentication auth, @RequestParam(required = false) Integer userId) {
+        User user = getCurrentUser(auth);
         return bookService.getAvailableBooks(user).stream()
                 .filter(b -> b.getAuthor().equalsIgnoreCase(author))
                 .toList();

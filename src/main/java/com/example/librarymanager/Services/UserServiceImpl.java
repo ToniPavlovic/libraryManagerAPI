@@ -64,6 +64,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findByUsername(String username) {
+        return repo.findByName(username);
+    }
+
+    @Override
     public Optional<User> findById(int id) {
         return repo.findById(id);
     }

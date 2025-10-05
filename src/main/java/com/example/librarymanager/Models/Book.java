@@ -18,7 +18,7 @@ public class Book {
     public String title;
     public String author;
     public String isbn;
-    public boolean isBorrowed = false;
+    public boolean borrowed = false;
     public LocalDate borrowDate;
     public LocalDate dueDate;
 
