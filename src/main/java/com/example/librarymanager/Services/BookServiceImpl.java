@@ -25,7 +25,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book addBook(Book book, User user) {
-        if (user == null || !user.isAdmin()) throw new UserNotAdminException();;
+        if (user == null || !user.isAdmin()) throw new UserNotAdminException();
         return bookRepository.save(book);
     }
 
@@ -77,7 +77,7 @@ public class BookServiceImpl implements BookService {
         }
 
         book.setBorrowed(false);
-        book.setBorrowedBy(user);
+        book.setBorrowedBy(null);
         book.setBorrowDate(null);
         book.setDueDate(null);
 
@@ -86,7 +86,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void removeBook(int bookId, User user) {
-        if (user == null || !user.isAdmin()) throw new UserNotAdminException();;
+        if (user == null || !user.isAdmin()) throw new UserNotAdminException();
         if (!bookRepository.existsById(bookId)) throw new BookNotFoundException();
         bookRepository.deleteById(bookId);
     }
