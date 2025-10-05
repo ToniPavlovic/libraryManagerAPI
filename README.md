@@ -8,6 +8,7 @@ A RESTful Library Manager application built with Java, Spring Boot, and Maven. I
 - Book management (CRUD, borrow, return, overdue fine calculation)
 - Admin authorization for protected actions
 - Password hashing (BCrypt)
+- JWT-based authentication and authorization
 - Input validation and exception handling
 - RESTful API design
 
@@ -18,6 +19,7 @@ A RESTful Library Manager application built with Java, Spring Boot, and Maven. I
 - Maven
 - JPA/Hibernate
 - BCrypt (password security)
+- JWT for authentication
 
 ## Project Structure
 
@@ -26,7 +28,8 @@ A RESTful Library Manager application built with Java, Spring Boot, and Maven. I
 - `Services/` — Business logic and service implementations
 - `AppDataContext/` — JPA repositories
 - `Middleware/` — Custom exceptions and validation
-
+- `Security/` — JWT utilities and filters
+  
 ## Getting Started
 
 ### Prerequisites
