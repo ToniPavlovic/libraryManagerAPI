@@ -34,9 +34,23 @@ public class BookController {
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
+    public List<Book> getAllBooks(Authentication auth) {
+        User user = getCurrentUser(auth);
+        return bookService.getAllBooks(user);
+    }
+
+    @GetMapping("/available")
+    @ResponseStatus(HttpStatus.OK)
     public List<Book> getAvailableBooks(Authentication auth, @RequestParam(required = false) Integer userId) {
         User user = getCurrentUser(auth);
         return bookService.getAvailableBooks(user);
+    }
+
+    @GetMapping("/borrowed")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Book> getBorrowedBooks(Authentication auth, @RequestParam(required = false) Integer userId) {
+        User user = getCurrentUser(auth);
+        return bookService.getBorrowedBooks(user);
     }
 
     @PostMapping("/borrow/{bookId}")
@@ -69,10 +83,8 @@ public class BookController {
 
     @GetMapping("/author/{author}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Book> findByAuthor(@PathVariable String author, Authentication auth, @RequestParam(required = false) Integer userId) {
+    public List<Book> getBooksByAuthor(Authentication auth, @RequestParam(required = false) Integer userId) {
         User user = getCurrentUser(auth);
-        return bookService.getAvailableBooks(user).stream()
-                .filter(b -> b.getAuthor().equalsIgnoreCase(author))
-                .toList();
+        return bookService.getBooksByAuthor(user);
     }
 }

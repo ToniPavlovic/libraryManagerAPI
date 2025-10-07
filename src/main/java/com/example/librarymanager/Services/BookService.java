@@ -9,9 +9,13 @@ public interface BookService {
 
     Book addBook(Book book, User user);
 
+    List<Book> getAllBooks(User user);
+
     List<Book> getAvailableBooks(User user);
 
     List<Book> getBorrowedBooks(User user);
+
+    List<Book> getBooksByAuthor(User user);
 
     Book borrowBook(int bookId, User user);
 

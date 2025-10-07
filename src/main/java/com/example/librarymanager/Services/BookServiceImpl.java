@@ -8,6 +8,7 @@ import com.example.librarymanager.Models.User;
 import com.example.librarymanager.AppDataContext.BookRepository;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -30,6 +31,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<Book> getAllBooks(User user) {
+        return bookRepository.findAll();
+    }
+
+    @Override
     public List<Book> getAvailableBooks(User user) {
         if (user == null) throw new UserNotLoggedInException();
         return bookRepository.findAll().stream().filter(b -> !b.isBorrowed()).toList();
@@ -42,6 +48,15 @@ public class BookServiceImpl implements BookService {
                 .filter(b -> b.isBorrowed() && b.getBorrowedBy().getId() == user.getId())
                 .toList();
     }
+
+    @Override
+    public List<Book> getBooksByAuthor(User user) {
+        if (user == null) throw new UserNotLoggedInException();
+        return bookRepository.findAll().stream()
+                .filter(b -> b.getAuthor().equalsIgnoreCase(b.author))
+                .toList();
+    }
+
 
     @Override
     public Book borrowBook(int bookId, User user) {

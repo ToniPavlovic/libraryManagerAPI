@@ -17,10 +17,16 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
-    private JWTUtil jwtUtil;
+    private final JWTUtil jwtUtil;
+
+    public AuthController(UserService userService, JWTUtil jwtUtil) {
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+    }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {

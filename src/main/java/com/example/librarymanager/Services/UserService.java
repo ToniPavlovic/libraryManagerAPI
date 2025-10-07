@@ -9,7 +9,7 @@ public interface UserService {
 
     User registerUser(String name, String password, boolean admin, User loggedInUser);
 
-    User login(String name, String password);
+    void login(String name, String password);
 
     List<User> listUsers();
 
