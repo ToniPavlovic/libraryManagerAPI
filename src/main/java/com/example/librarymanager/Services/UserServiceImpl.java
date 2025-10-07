@@ -14,42 +14,40 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository repo;
+    private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository repo){
-        this.repo = repo;
+    public UserServiceImpl(UserRepository userRepository){
+        this.userRepository = userRepository;
     }
 
     @Override
     public User registerUser(String name, String password, boolean isAdmin, User loggedInUser) {
-        if(!repo.findAll().isEmpty()){
+        if(!userRepository.findAll().isEmpty()){
             if (loggedInUser == null || !loggedInUser.isAdmin()){
                 throw new UserNotAdminException();
             }
         } else {
-            // first user is admin by default
-            isAdmin = true;
+            isAdmin = true; // first user is admin by default
         }
 
         User newUser = new User(0, name, hashPassword(password), isAdmin);
-        repo.save(newUser);
+        userRepository.save(newUser);
         return newUser;
     }
 
     @Override
-    public User login(String name, String password) {
-        User user = repo.findByName(name)
+    public void login(String name, String password) {
+        User user = userRepository.findByName(name)
                 .orElseThrow(InvalidCredentialsException::new);
 
         if (!verifyPassword(password, user.getPassword())) {
             throw new InvalidCredentialsException();
         }
-        return user;
     }
 
     @Override
     public List<User> listUsers() {
-        return repo.findAll();
+        return userRepository.findAll();
     }
 
     @Override
@@ -58,19 +56,19 @@ public class UserServiceImpl implements UserService {
             throw new UserNotAdminException();
         }
 
-        User existing = repo.findById(userId)
+        User existing = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-        repo.delete(existing);
+        userRepository.delete(existing);
     }
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return repo.findByName(username);
+        return userRepository.findByName(username);
     }
 
     @Override
     public Optional<User> findById(int id) {
-        return repo.findById(id);
+        return userRepository.findById(id);
     }
 
     @Override
@@ -79,14 +77,14 @@ public class UserServiceImpl implements UserService {
             throw new UserNotAdminException();
         }
 
-        User existing = repo.findById(id)
+        User existing = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
 
         existing.setName(updatedUser.getName());
         existing.setPassword(hashPassword(updatedUser.getPassword()));
         existing.setAdmin(updatedUser.isAdmin());
 
-        return repo.save(existing);
+        return userRepository.save(existing);
     }
 
     public static String hashPassword(String password){
