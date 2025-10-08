@@ -8,7 +8,6 @@ import com.example.librarymanager.Models.User;
 import com.example.librarymanager.AppDataContext.BookRepository;
 import org.springframework.stereotype.Service;
 
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -56,7 +55,6 @@ public class BookServiceImpl implements BookService {
                 .filter(b -> b.getAuthor().equalsIgnoreCase(b.author))
                 .toList();
     }
-
 
     @Override
     public Book borrowBook(int bookId, User user) {
