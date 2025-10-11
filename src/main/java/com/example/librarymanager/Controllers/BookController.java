@@ -83,8 +83,8 @@ public class BookController {
 
     @GetMapping("/author/{author}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Book> getBooksByAuthor(Authentication auth, @RequestParam(required = false) Integer userId) {
+    public List<Book> getBooksByAuthor(@PathVariable String author, Authentication auth, @RequestParam(required = false) Integer userId) {
         User user = getCurrentUser(auth);
-        return bookService.getBooksByAuthor(user);
+        return bookService.getBooksByAuthor(author, user);
     }
 }

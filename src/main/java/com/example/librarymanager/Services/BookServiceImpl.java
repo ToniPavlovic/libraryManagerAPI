@@ -49,10 +49,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getBooksByAuthor(User user) {
+    public List<Book> getBooksByAuthor(String author, User user) {
         if (user == null) throw new UserNotLoggedInException();
         return bookRepository.findAll().stream()
-                .filter(b -> b.getAuthor().equalsIgnoreCase(b.author))
+                .filter(b -> b.getAuthor().equalsIgnoreCase(author))
                 .toList();
     }
 
