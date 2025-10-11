@@ -11,6 +11,7 @@ A RESTful Library Manager application built with Java, Spring Boot, and Maven. I
 - JWT-based authentication and authorization
 - Input validation and exception handling
 - RESTful API design
+- SwaggerUI
 
 ## Technologies
 
@@ -20,6 +21,7 @@ A RESTful Library Manager application built with Java, Spring Boot, and Maven. I
 - JPA/Hibernate
 - BCrypt (password security)
 - JWT for authentication
+- SwaggerUI
 
 ## Project Structure
 
@@ -29,6 +31,7 @@ A RESTful Library Manager application built with Java, Spring Boot, and Maven. I
 - `AppDataContext/` — JPA repositories
 - `Middleware/` — Custom exceptions and validation
 - `Security/` — JWT utilities and filters
+- `UI/` — SwaggerUI configuration
   
 ## Getting Started
 
@@ -43,10 +46,16 @@ A RESTful Library Manager application built with Java, Spring Boot, and Maven. I
 mvn clean install
 mvn spring-boot:run
 ```
+## SwaggerUI
 
-## API runs at `http://localhost:8080`
+After running the application, use the link below to explore and test all endpoints interactively: 
+`http://localhost:8080/swagger-ui/index.html`
 
 ### API Endpoints
+
+#### Authoritization
+
+- `POST /login` — Logs the user in and gives him a bearer token
 
 #### Users
 
