@@ -15,7 +15,7 @@ public interface BookService {
 
     List<Book> getBorrowedBooks(User user);
 
-    List<Book> getBooksByAuthor(User user);
+    List<Book> getBooksByAuthor(String author, User user);
 
     Book borrowBook(int bookId, User user);
 
