@@ -15,7 +15,7 @@ A RESTful Library Manager application built with Java, Spring Boot, and Maven. I
 
 ## Technologies
 
-- Java 17+
+- Java 21
 - Spring Boot
 - Maven
 - JPA/Hibernate
