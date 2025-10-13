@@ -37,7 +37,7 @@ A RESTful Library Manager application built with Java, Spring Boot, and Maven. I
 
 ### Prerequisites
 
-- Java 17 or higher
+- Java 21
 - Maven
 
 ### Build & Run
