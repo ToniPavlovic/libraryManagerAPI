@@ -40,12 +40,34 @@ A RESTful Library Manager application built with Java, Spring Boot, and Maven. I
 - Java 21
 - Maven
 
+### Add Database Credentiaals and API Key
+
+```bash
+# suppress inspection "UnusedProperty" for whole file
+spring.application.name=libraryManager
+
+# MySQL Connection
+spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USER}
+spring.datasource.password=${DB_PASSWORD}
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# JPA / Hibernate
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+
+# JWT
+jwt.secret=${JWT_SECRET}
+```
+
 ### Build & Run
 
 ```bash
 mvn clean install
 mvn spring-boot:run
 ```
+
 ## SwaggerUI
 
 After running the application, use the link below to explore and test all endpoints interactively: 
